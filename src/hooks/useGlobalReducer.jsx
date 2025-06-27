@@ -1,24 +1,42 @@
-// Import necessary hooks and functions from React.
 import { useContext, useReducer, createContext } from "react";
-import storeReducer, { initialStore } from "../store"  // Import the reducer and the initial state.
 
-// Create a context to hold the global state of the application
-// We will call this global state the "store" to avoid confusion while using local states
-const StoreContext = createContext()
+// Estado inicial ejemplo
+const initialStore = {
+  user: null,
+  theme: "light",
+  // ... otros estados globales
+};
 
-// Define a provider component that encapsulates the store and warps it in a context provider to 
-// broadcast the information throught all the app pages and components.
-export function StoreProvider({ children }) {
-    // Initialize reducer with the initial state.
-    const [store, dispatch] = useReducer(storeReducer, initialStore())
-    // Provide the store and dispatch method to all child components.
-    return <StoreContext.Provider value={{ store, dispatch }}>
-        {children}
-    </StoreContext.Provider>
+// Reducer ejemplo
+function storeReducer(state, action) {
+  switch (action.type) {
+    case "SET_USER":
+      return { ...state, user: action.payload };
+    case "SET_THEME":
+      return { ...state, theme: action.payload };
+    // añade más acciones aquí
+    default:
+      return state;
+  }
 }
 
-// Custom hook to access the global state and dispatch function.
+const StoreContext = createContext();
+
+// Proveedor global que envuelve la app y provee store y dispatch
+export function StoreProvider({ children }) {
+  const [store, dispatch] = useReducer(storeReducer, initialStore);
+  return (
+    <StoreContext.Provider value={{ store, dispatch }}>
+      {children}
+    </StoreContext.Provider>
+  );
+}
+
+// Hook personalizado para acceder fácilmente al store global
 export default function useGlobalReducer() {
-    const { dispatch, store } = useContext(StoreContext)
-    return { dispatch, store };
+  const context = useContext(StoreContext);
+  if (!context) {
+    throw new Error("useGlobalReducer debe usarse dentro de StoreProvider");
+  }
+  return context; // { store, dispatch }
 }
