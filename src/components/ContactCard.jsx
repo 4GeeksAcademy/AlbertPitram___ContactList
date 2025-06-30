@@ -1,4 +1,3 @@
-// src/components/ContactCard.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,7 +10,7 @@ const ContactCard = ({ contact, onDelete }) => {
         <h5 className="card-title">{contact.name}</h5>
         <p className="card-text mb-1"><strong>Email:</strong> {contact.email}</p>
         <p className="card-text mb-1"><strong>Phone:</strong> {contact.phone}</p>
-        <p className="card-text"><strong>Adress:</strong> {contact.address}</p>
+        <p className="card-text"><strong>Address:</strong> {contact.address}</p>
 
         <div className="d-flex justify-content-end mt-3">
           <button

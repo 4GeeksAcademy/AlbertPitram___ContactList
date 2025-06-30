@@ -11,6 +11,17 @@ export const ContactProvider = ({ children }) => {
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(false);
 
+ 
+  const createAgendaIfNotExists = async () => {
+    try {
+      await fetch(`${API_BASE}agendas/${AGENDA}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (err) {
+      console.error("No s'ha pogut crear l'agenda:", err);
+    }
+  };
 
   const fetchContacts = async () => {
     setLoading(true);
@@ -26,14 +37,14 @@ export const ContactProvider = ({ children }) => {
     setLoading(false);
   };
 
- 
   const addContact = async (contact) => {
     setLoading(true);
     const newContact = {
-      name: contact.name,
+      name: contact.name, // Aquí ha de ser `name` i no `full_name`
       phone: contact.phone,
       email: contact.email,
       address: contact.address,
+      agenda_slug: AGENDA, // Important enviar també l’agenda
     };
 
     try {
@@ -49,30 +60,33 @@ export const ContactProvider = ({ children }) => {
       }
       await fetchContacts();
     } catch (error) {
-      console.error("Error aadding contact:", error);
+      console.error("Error adding contact:", error);
     }
     setLoading(false);
   };
 
-
   const updateContact = async (contact) => {
     setLoading(true);
     const updatedContact = {
-      name: contact.name,
+      name: contact.name, // També `name` aquí
       phone: contact.phone,
       email: contact.email,
       address: contact.address,
+      agenda_slug: AGENDA,
     };
 
     try {
-      const res = await fetch(`${API_BASE}agendas/${AGENDA}/contacts/${contact.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedContact),
-      });
+      const res = await fetch(
+        `${API_BASE}agendas/${AGENDA}/contacts/${contact.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedContact),
+        }
+      );
       if (!res.ok) {
         const errorText = await res.text();
-        console.error("Respuesta del servidor:", errorText);
+        console.error("Server Response:", errorText);
         throw new Error("Error updating contact");
       }
       await fetchContacts();
@@ -82,13 +96,15 @@ export const ContactProvider = ({ children }) => {
     setLoading(false);
   };
 
-  
   const deleteContact = async (id) => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}agendas/${AGENDA}/contacts/${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `${API_BASE}agendas/${AGENDA}/contacts/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (!res.ok) {
         const errorText = await res.text();
         console.error("Server response:", errorText);
@@ -102,7 +118,7 @@ export const ContactProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchContacts();
+    createAgendaIfNotExists().then(fetchContacts);
   }, []);
 
   return (

@@ -22,7 +22,13 @@ const AddContact = () => {
     if (isEditing) {
       const contact = contacts.find((c) => c.id === parseInt(editingId));
       if (contact) {
-        setFormData(contact);
+        setFormData({
+          name: contact.name,    // Aquí també `name`
+          email: contact.email,
+          phone: contact.phone,
+          address: contact.address,
+          id: contact.id,
+        });
       }
     }
   }, [editingId, contacts, isEditing]);
@@ -34,11 +40,11 @@ const AddContact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isEditing) {
-      await updateContact(editingId, formData);
+      await updateContact(formData);
     } else {
       await addContact(formData);
     }
-    navigate("/"); 
+    navigate("/");
   };
 
   return (
@@ -85,7 +91,6 @@ const AddContact = () => {
         </button>
       </form>
 
-      
       <div className="mt-4 text-center">
         <Link to="/" className="btn btn-secondary">
           ← Back to Contact List
