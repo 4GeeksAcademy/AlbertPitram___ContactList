@@ -7,7 +7,7 @@ const Home = () => {
   const contactList = Array.isArray(contacts) ? contacts : [];
 
   const handleDelete = async (id) => {
-    if (window.confirm("¿Estás seguro de que quieres eliminar este contacto?")) {
+    if (window.confirm("¿Are you sure you want to delete this contact?")) {
       await deleteContact(id);
     }
   };

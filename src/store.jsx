@@ -19,7 +19,7 @@ export const ContactProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
       });
     } catch (err) {
-      console.error("No s'ha pogut crear l'agenda:", err);
+      console.error("Couldn't create agenda:", err);
     }
   };
 
@@ -31,7 +31,7 @@ export const ContactProvider = ({ children }) => {
       const data = await res.json();
       setContacts(data.contacts || []);
     } catch (error) {
-      console.error("Error cargando contactos:", error);
+      console.error("Error loading contacts:", error);
       setContacts([]);
     }
     setLoading(false);

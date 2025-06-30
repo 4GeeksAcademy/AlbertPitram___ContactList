@@ -23,7 +23,7 @@ const AddContact = () => {
       const contact = contacts.find((c) => c.id === parseInt(editingId));
       if (contact) {
         setFormData({
-          name: contact.name,    // Aquí també `name`
+          name: contact.name,    
           email: contact.email,
           phone: contact.phone,
           address: contact.address,
